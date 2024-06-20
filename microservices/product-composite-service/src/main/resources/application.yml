@@ -15,4 +15,17 @@ app:
 logging:
   level:
     root: INFO
-    hu.hu.therealuhlarzoltan: DEBUG
+    hu.therealuhlarzoltan: DEBUG
+---
+spring.config.activate.on-profile: docker
+server.port: 8080
+app:
+  product-service:
+    host: product
+    port: 8080
+  recommendation-service:
+    host: recommendation
+    port: 8080
+  review-service:
+    host: review
+    port: 8080

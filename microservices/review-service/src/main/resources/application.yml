@@ -4,4 +4,8 @@ server.error.include-message: always
 logging:
   level:
     root: INFO
-    se.magnus: DEBUG
+    hu.therealuhlarzoltan: DEBUG
+
+---
+spring.config.activate.on-profile: docker
+server.port: 8080
