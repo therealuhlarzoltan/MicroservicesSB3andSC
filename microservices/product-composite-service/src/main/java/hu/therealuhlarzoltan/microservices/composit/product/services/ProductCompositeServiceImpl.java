@@ -2,6 +2,10 @@ package hu.therealuhlarzoltan.microservices.composit.product.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import hu.therealuhlarzoltan.api.composite.product.*;
@@ -15,7 +19,7 @@ import hu.therealuhlarzoltan.util.http.ServiceUtil;
 public class ProductCompositeServiceImpl implements ProductCompositeService {
 
     private final ServiceUtil serviceUtil;
-    private ProductCompositeIntegration integration;
+    private final ProductCompositeIntegration integration;
 
     @Autowired
     public ProductCompositeServiceImpl(
