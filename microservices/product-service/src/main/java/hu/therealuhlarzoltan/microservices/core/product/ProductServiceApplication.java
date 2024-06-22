@@ -21,6 +21,6 @@ public class ProductServiceApplication {
 		LOG.info("Connected to MongoDb: " + mongodDbHost + ":" +
 				mongodDbPort);
 	}
-	}
-
 }
+
+
