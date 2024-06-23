@@ -3,6 +3,8 @@ package hu.therealuhlarzoltan.api.core.review;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ReviewService {
 
@@ -10,13 +12,13 @@ public interface ReviewService {
             value    = "/review",
             consumes = "application/json",
             produces = "application/json")
-    Review createReview(@RequestBody Review body);
+    Mono<Review> createReview(@RequestBody Review body);
 
     @GetMapping(
             value = "/review",
             produces = "application/json")
-    List<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
+    Flux<Review> getReviews(@RequestParam(value = "productId", required = true) int productId);
 
     @DeleteMapping(value = "/review")
-    void deleteReviews(@RequestParam(value = "productId", required = true)  int productId);
+    Mono<Void> deleteReviews(@RequestParam(value = "productId", required = true)  int productId);
 }
