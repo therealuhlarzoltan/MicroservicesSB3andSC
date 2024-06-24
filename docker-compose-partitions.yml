@@ -70,8 +70,6 @@ services:
   product-composite:
     build: microservices/product-composite-service
     mem_limit: 512m
-    ports:
-      - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned
     depends_on:
@@ -117,3 +115,15 @@ services:
       interval: 5s
       timeout: 2s
       retries: 60
+
+  eureka:
+    build: spring-cloud/eureka-server
+    mem_limit: 512m
+
+  gateway:
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    build: spring-cloud/gateway
+    mem_limit: 512m
+    ports:
+      - "8080:8080"

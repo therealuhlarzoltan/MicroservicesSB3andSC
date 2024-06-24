@@ -38,6 +38,8 @@ public class ReviewServiceApplication {
 		ConfigurableApplicationContext ctx = SpringApplication.run(ReviewServiceApplication.class, args);
 
 		String mysqlUri = ctx.getEnvironment().getProperty("spring.datasource.url");
+		String applicationName = ctx.getEnvironment().getProperty("spring.application.name");
+		LOG.info("Application with name of " + applicationName + " STARTED");
 		LOG.info("Connected to MySQL: " + mysqlUri);
 	}
 

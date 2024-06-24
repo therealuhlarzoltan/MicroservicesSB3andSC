@@ -15,7 +15,7 @@ java {
 
 ext {
 	mapstructVersion = "1.5.3.Final"
-	springCloudVersion = "2022.0.1"
+	springCloudVersion = "2023.0.2"
 }
 
 repositories {
@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation platform('org.testcontainers:testcontainers-bom:1.15.2')
 	testImplementation 'org.testcontainers:testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'

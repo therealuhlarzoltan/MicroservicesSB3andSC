@@ -18,10 +18,11 @@ import java.util.function.Consumer;
 import static hu.therealuhlarzoltan.api.event.Event.Type.CREATE;
 import static hu.therealuhlarzoltan.api.event.Event.Type.DELETE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {"eureka.client.enabled=false"})
 @AutoConfigureWebTestClient
 class RecommendationServiceApplicationTests extends MongoDBTestBase {
 
