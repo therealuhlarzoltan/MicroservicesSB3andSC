@@ -2,7 +2,8 @@ server.port: 8080
 
 spring.application.name: gateway
 
-app.eureka-server: localhost
+app:
+  eureka-server: localhost
 
 eureka:
   client:
@@ -68,17 +69,19 @@ spring.cloud.gateway.routes:
   filters:
     - SetPath=/501
 
-management.endpoint.gateway.enabled: true
-management.endpoint.health.show-details: "ALWAYS"
+management.endpoint:
+  gateway.enabled: true
+  health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
     org.springframework.cloud.gateway: TRACE
 
 ---
 spring.config.activate.on-profile: docker
 
-app.eureka-server: eureka
+app:
+  eureka-server: eureka
