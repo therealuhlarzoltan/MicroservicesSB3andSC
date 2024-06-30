@@ -9,16 +9,34 @@ spring:
 
 app:
   eureka-server: localhost
+  eureka-username: u
+  eureka-password: p
+  auth-server: localhost
+
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${app.eureka-server}:8761/eureka/
+      defaultZone: "http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/"
+
     initialInstanceInfoReplicationIntervalSeconds: 5
     registryFetchIntervalSeconds: 5
   instance:
     leaseRenewalIntervalInSeconds: 5
     leaseExpirationDurationInSeconds: 5
+
+spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
+
+swagger-ui:
+  oauth2-redirect-url: /swagger-ui/oauth2-redirect.html
+  oauth:
+    clientId: writer
+    clientSecret: secret-writer
+    useBasicAuthenticationWithAccessCodeGrant: true
+oAuthFlow:
+  authorizationUrl: https://localhost:8443/oauth2/authorize
+  tokenUrl: https://localhost:8443/oauth2/token
+
 
 api:
   common:
@@ -144,11 +162,7 @@ server.port: 8080
 
 app:
   eureka-server: eureka
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka:8761/eureka/
+  auth-server: auth-server
 
 spring.rabbitmq.host: rabbitmq
 

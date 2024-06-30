@@ -1,4 +1,4 @@
-package hu.therealuhlarzoltan.microservices.composit.product;
+package hu.therealuhlarzoltan.microservices.composit.product.config;
 
 import hu.therealuhlarzoltan.microservices.composit.product.services.ProductCompositeIntegration;
 import org.springframework.beans.factory.annotation.Autowired;

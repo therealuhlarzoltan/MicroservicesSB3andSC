@@ -1,4 +1,4 @@
-package hu.therealuhlarzoltan.springcloud.gateway;
+package hu.therealuhlarzoltan.springcloud.gateway.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,8 @@ public class HealthCheckConfiguration {
                 getHealth("http://review"));
         registry.put("product-composite", () ->
                 getHealth("http://product-composite"));
+        registry.put("auth-server", () ->
+                getHealth("http://auth-server"));
         return CompositeReactiveHealthContributor.fromMap(registry);
     }
     private Mono<Health> getHealth(String baseUrl) {

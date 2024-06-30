@@ -8,11 +8,14 @@ spring:
 
 app:
   eureka-server: localhost
+  eureka-username: u
+  eureka-password: p
+
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${app.eureka-server}:8761/eureka/
+      defaultZone: "http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/"
     initialInstanceInfoReplicationIntervalSeconds: 5
     registryFetchIntervalSeconds: 5
   instance:
@@ -73,11 +76,6 @@ spring.config.activate.on-profile: docker
 
 app:
   eureka-server: eureka
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka:8761/eureka/
 
 server.port: 8080
 

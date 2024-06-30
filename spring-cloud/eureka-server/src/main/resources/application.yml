@@ -23,3 +23,7 @@ management.endpoints.web.exposure.include: "*"
 logging:
   level:
     com.netflix.eureka: DEBUG
+
+app:
+  eureka-username: u
+  eureka-password: p
