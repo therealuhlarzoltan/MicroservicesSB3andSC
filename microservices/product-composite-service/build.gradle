@@ -26,18 +26,27 @@ jar {
 }
 
 dependencies {
+	//internal
 	implementation project(':api')
 	implementation project(':util')
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//web
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.2'
+	//message brokers
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+	//service discovery
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
-
+	//configuration
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	//other
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.retry:spring-retry'
+	//tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'

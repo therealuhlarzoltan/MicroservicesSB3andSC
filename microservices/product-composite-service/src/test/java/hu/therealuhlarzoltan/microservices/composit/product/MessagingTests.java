@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.messaging.Message;
 import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
@@ -41,8 +42,11 @@ import static reactor.core.publisher.Mono.just;
         properties = {
                 "spring.security.oauth2.resourceserver.jwt.issuer-uri=",
                 "spring.main.allow-bean-definition-overriding=true",
-                "eureka.client.enabled=false"})
+                "eureka.client.enabled=false",
+                "spring.cloud.stream.defaultBinder=rabbit",
+                "spring.cloud.config.enabled=false"})
 @Import({TestChannelBinderConfiguration.class})
+@TestPropertySource(properties = "spring.config.import=")
 class MessagingTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessagingTests.class);

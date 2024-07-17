@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import hu.therealuhlarzoltan.microservices.core.review.persistence.ReviewEntity;
 import hu.therealuhlarzoltan.microservices.core.review.persistence.ReviewRepository;
 
-@DataJpaTest
+@DataJpaTest(properties = {"spring.jpa.hibernate.ddl-auto=update", "spring.cloud.config.enabled=false"})
 @Transactional(propagation = NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PersistenceTests extends MySQLTestBase {
