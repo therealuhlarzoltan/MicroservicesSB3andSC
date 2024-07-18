@@ -27,17 +27,27 @@ jar {
 }
 
 dependencies {
+	//internal
 	implementation project(':api')
 	implementation project(':util')
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//web
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//other
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	implementation 'org.springframework.retry:spring-retry'
+	//mongoDb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	implementation platform('org.testcontainers:testcontainers-bom:1.15.2')
+	//message brokers
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+	//service discovery
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-	implementation platform('org.testcontainers:testcontainers-bom:1.15.2')
+	//configuration
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	//tests
 	testImplementation 'org.testcontainers:testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:mongodb'

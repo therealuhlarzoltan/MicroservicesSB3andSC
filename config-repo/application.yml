@@ -30,6 +30,10 @@ spring.cloud.stream.defaultBinder: rabbit
 management.endpoint.health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"
 
+logging:
+  level:
+    root: DEBUG
+
 ---
 spring.config.activate.on-profile: docker
 

@@ -46,7 +46,6 @@ import static reactor.core.publisher.Mono.just;
                 "spring.cloud.stream.defaultBinder=rabbit",
                 "spring.cloud.config.enabled=false"})
 @Import({TestChannelBinderConfiguration.class})
-@TestPropertySource(properties = "spring.config.import=")
 class MessagingTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessagingTests.class);

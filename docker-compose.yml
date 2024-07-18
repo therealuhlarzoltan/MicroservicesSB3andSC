@@ -50,6 +50,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      auth-server:
+        condition: service_healthy
 
   mongodb:
     image: mongo:6.0.4
@@ -94,6 +96,10 @@ services:
   eureka:
     build: spring-cloud/eureka-server
     mem_limit: 512m
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=${CONFIG_SERVER_USR}
+      - CONFIG_SERVER_PWD=${CONFIG_SERVER_PWD}
 
   gateway:
     environment:
