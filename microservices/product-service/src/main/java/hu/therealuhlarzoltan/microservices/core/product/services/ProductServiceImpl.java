@@ -18,6 +18,9 @@ import hu.therealuhlarzoltan.api.exceptions.NotFoundException;
 import hu.therealuhlarzoltan.util.http.ServiceUtil;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Random;
+
 @RestController
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -29,13 +32,17 @@ public class ProductServiceImpl implements ProductService {
     private final ServiceUtil serviceUtil;
 
     @Override
-    public Mono<Product> getProduct(int productId) {
-        if (productId < 1)
+    public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+
+        if (productId < 1) {
             throw new InvalidInputException("Invalid productId: " + productId);
+        }
 
         LOG.info("Will get product info for id={}", productId);
 
         return repository.findByProductId(productId)
+                .map(e -> throwErrorIfBadLuck(e, faultPercent))
+                .delayElement(Duration.ofSeconds(delay))
                 .switchIfEmpty(Mono.error(new NotFoundException("No product found for productId: " + productId)))
                 .log(LOG.getName(), FINE)
                 .map(e -> mapper.entityToApi(e))
@@ -68,5 +75,34 @@ public class ProductServiceImpl implements ProductService {
     private Product setServiceAddress(Product e) {
         e.setServiceAddress(serviceUtil.getServiceAddress());
         return e;
+    }
+
+    private ProductEntity throwErrorIfBadLuck(ProductEntity entity, int faultPercent) {
+
+        if (faultPercent == 0) {
+            return entity;
+        }
+
+        int randomThreshold = getRandomNumber(1, 100);
+
+        if (faultPercent < randomThreshold) {
+            LOG.debug("We got lucky, no error occurred, {} < {}", faultPercent, randomThreshold);
+        } else {
+            LOG.info("Bad luck, an error occurred, {} >= {}", faultPercent, randomThreshold);
+            throw new RuntimeException("Something went wrong...");
+        }
+
+        return entity;
+    }
+
+    private final Random randomNumberGenerator = new Random();
+
+    private int getRandomNumber(int min, int max) {
+
+        if (max < min) {
+            throw new IllegalArgumentException("Max must be greater than min");
+        }
+
+        return randomNumberGenerator.nextInt((max - min) + 1) + min;
     }
 }

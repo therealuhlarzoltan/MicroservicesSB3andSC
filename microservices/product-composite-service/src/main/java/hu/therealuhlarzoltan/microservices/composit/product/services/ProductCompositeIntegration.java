@@ -7,6 +7,11 @@ import static hu.therealuhlarzoltan.api.event.Event.Type.DELETE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,9 @@ import hu.therealuhlarzoltan.api.event.Event;
 import hu.therealuhlarzoltan.api.exceptions.InvalidInputException;
 import hu.therealuhlarzoltan.api.exceptions.NotFoundException;
 import hu.therealuhlarzoltan.util.http.HttpErrorInfo;
+import hu.therealuhlarzoltan.util.http.ServiceUtil;
+import org.springframework.web.util.UriComponentsBuilder;
+import java.net.URI;
 
 @Component
 public class ProductCompositeIntegration implements ProductService, RecommendationService, ReviewService {
@@ -42,6 +50,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     private static final String RECOMMENDATION_SERVICE_URL = "http://recommendation";
     private static final String REVIEW_SERVICE_URL = "http://review";
 
+    private final ServiceUtil serviceUtil;
 
     private final WebClient webClient;
     private final ObjectMapper mapper;
@@ -55,11 +64,13 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             @Qualifier("publishEventScheduler") Scheduler publishEventScheduler,
             WebClient.Builder webClientBuilder,
             ObjectMapper mapper,
-            StreamBridge streamBridge) {
+            StreamBridge streamBridge,
+            ServiceUtil serviceUtil) {
         this.publishEventScheduler = publishEventScheduler;
         this.webClient = webClientBuilder.build();
         this.mapper = mapper;
         this.streamBridge = streamBridge;
+        this.serviceUtil = serviceUtil;
     }
 
     @Override
@@ -72,11 +83,32 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
     @Override
-    public Mono<Product> getProduct(int productId) {
-        String url = PRODUCT_SERVICE_URL + "/product/" + productId;
+    @Retry(name = "product")
+    @TimeLimiter(name = "product")
+    @CircuitBreaker(name = "product", fallbackMethod = "getProductFallbackValue")
+    public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
+
+        URI url = UriComponentsBuilder.fromUriString(PRODUCT_SERVICE_URL
+                + "/product/{productId}?delay={delay}&faultPercent={faultPercent}").build(productId, delay, faultPercent);
         LOG.debug("Will call the getProduct API on URL: {}", url);
 
-        return webClient.get().uri(url).retrieve().bodyToMono(Product.class).log(LOG.getName(), FINE).onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
+        return webClient.get().uri(url)
+                .retrieve().bodyToMono(Product.class).log(LOG.getName(), FINE)
+                .onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
+    }
+
+    private Mono<Product> getProductFallbackValue(int productId, int delay, int faultPercent, CallNotPermittedException ex) {
+
+        LOG.warn("Creating a fail-fast fallback product for productId = {}, delay = {}, faultPercent = {} and exception = {} ",
+                productId, delay, faultPercent, ex.toString());
+
+        if (productId == 13) {
+            String errMsg = "Product Id: " + productId + " not found in fallback cache!";
+            LOG.warn(errMsg);
+            throw new NotFoundException(errMsg);
+        }
+
+        return Mono.just(new Product(productId, "Fallback product" + productId, productId, serviceUtil.getServiceAddress()));
     }
 
     @Override
@@ -98,7 +130,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
 
-        String url = RECOMMENDATION_SERVICE_URL + "/recommendation?productId=" + productId;
+        URI url = UriComponentsBuilder.fromUriString(RECOMMENDATION_SERVICE_URL + "/recommendation?productId={productId}").build(productId);
 
         LOG.debug("Will call the getRecommendations API on URL: {}", url);
 
@@ -125,7 +157,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Review> getReviews(int productId) {
 
-        String url = REVIEW_SERVICE_URL + "/review?productId=" + productId;
+        URI url = UriComponentsBuilder.fromUriString(REVIEW_SERVICE_URL + "/review?productId={productId}").build(productId);
 
         LOG.debug("Will call the getReviews API on URL: {}", url);
 
