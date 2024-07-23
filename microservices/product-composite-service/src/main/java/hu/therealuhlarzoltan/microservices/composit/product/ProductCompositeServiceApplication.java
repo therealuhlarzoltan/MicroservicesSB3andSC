@@ -19,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
+import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
+import reactor.core.publisher.Hooks;
 
 @SpringBootApplication
 @ComponentScan("hu.therealuhlarzoltan")
@@ -51,6 +53,7 @@ public class ProductCompositeServiceApplication {
 	}
 
 	public static void main(String[] args) {
+		Hooks.enableAutomaticContextPropagation();
 		ConfigurableApplicationContext ctx = SpringApplication.run(ProductCompositeServiceApplication.class, args);
 
 		String applicationName = ctx.getEnvironment().getProperty("spring.application.name");
@@ -82,10 +85,12 @@ public class ProductCompositeServiceApplication {
 		return Schedulers.newBoundedElastic(threadPoolSize, taskQueueSize, "publish-pool");
 	}
 
+	@Autowired
+	private ReactorLoadBalancerExchangeFilterFunction lbFunction;
+
 	@Bean
-	@LoadBalanced
-	public WebClient.Builder loadBalancedWebClientBuilder() {
-		return WebClient.builder();
+	public WebClient webClient(WebClient.Builder builder) {
+		return builder.filter(lbFunction).build();
 	}
 
 

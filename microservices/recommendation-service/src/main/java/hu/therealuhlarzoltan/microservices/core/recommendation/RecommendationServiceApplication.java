@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexRes
 import org.springframework.data.mongodb.core.index.ReactiveIndexOperations;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
+import reactor.core.publisher.Hooks;
 
 @SpringBootApplication
 @ComponentScan("hu.therealuhlarzoltan")
@@ -24,6 +25,7 @@ public class RecommendationServiceApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(RecommendationServiceApplication.class);
 
 	public static void main(String[] args) {
+		Hooks.enableAutomaticContextPropagation();
 		ConfigurableApplicationContext ctx = SpringApplication.run(RecommendationServiceApplication.class, args);
 
 		String mongodDbHost = ctx.getEnvironment().getProperty("spring.data.mongodb.host");

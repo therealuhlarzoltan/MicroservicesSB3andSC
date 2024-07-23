@@ -93,7 +93,7 @@ management.endpoint.gateway.enabled: true
 
 logging:
   level:
-    root: DEBUG
+    root: INFO
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: DEBUG
-    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway: DEBUG
     org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE

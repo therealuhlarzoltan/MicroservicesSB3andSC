@@ -26,6 +26,10 @@ jar {
 	enabled = false
 }
 
+springBoot {
+	buildInfo()
+}
+
 dependencies {
 	//internal
 	implementation project(':api')
@@ -46,12 +50,15 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	//other
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 	//circuit breaker
 	implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
 	implementation "io.github.resilience4j:resilience4j-reactor:${resilience4jVersion}"
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
-
+	implementation 'org.springframework.retry:spring-retry'
+	//distributed tracing
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+	implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
 	//tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'

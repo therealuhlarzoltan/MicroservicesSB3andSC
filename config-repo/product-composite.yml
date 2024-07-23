@@ -141,9 +141,12 @@ resilience4j.circuitbreaker:
         - hu.therealuhlarzoltan.api.exceptions.InvalidInputException
         - hu.therealuhlarzoltan.api.exceptions.NotFoundException
 
+spring.codec.log-request-details: true
+logging.level.org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
 
 logging:
   level:
     root: INFO
-    hu.therealuhlarzoltan: DEBUG
+    hu.therealuhlarzoltan: INFO
     com.netflix.eureka: DEBUG
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: INFO

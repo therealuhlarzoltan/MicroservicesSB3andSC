@@ -16,4 +16,4 @@ eureka:
 
 logging:
   level:
-    root: DEBUG
+    root: INFO
